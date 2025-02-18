@@ -12,6 +12,116 @@ Angular est un framework front-end open-source basé sur TypeScript, développé
 
 ---
 
+# Expliquez la différence entre les composants, les directives et les signaux en Angular. Comment sont-ils utilisés dans une application Angular ?
+
+## 1. Composants
+
+### Définition :
+Un composant est une classe décorée avec `@Component` qui gère une partie de l’interface utilisateur (UI). Il combine un template HTML, des styles CSS et une logique TypeScript.
+
+### Rôle :
+- Structurer l’application en blocs réutilisables.
+- Gérer l’affichage des données et les interactions utilisateur.
+
+### Exemple :
+
+```typescript
+@Component({
+  selector: 'app-example',
+  template: `<p>{{ message }}</p>`,
+})
+export class ExampleComponent {
+  message = 'Hello, Angular!';
+}
+```
+
+---
+
+## 2. Directives
+
+### Définition :
+Une directive est une classe décorée avec `@Directive` qui modifie le comportement ou l’apparence des éléments DOM.
+
+### Types de directives :
+
+- **Directives structurelles** :
+  - Modifient la structure du DOM (ajoutent ou suppriment des éléments).
+  - Exemples : `*ngIf`, `*ngFor`.
+- **Directives d’attribut** :
+  - Modifient l’apparence ou le comportement d’un élément.
+  - Exemples : `ngStyle`, `ngClass`.
+
+### Exemple de directive personnalisée :
+
+```typescript
+@Directive({
+  selector: '[appHighlight]',
+})
+export class HighlightDirective {
+  constructor(private el: ElementRef) {
+    el.nativeElement.style.backgroundColor = 'yellow';
+  }
+}
+```
+
+### Utilisation :
+
+```html
+<p appHighlight>Ce texte est mis en évidence.</p>
+```
+
+---
+
+## 3. Signaux (Angular 16+)
+
+### Définition :
+Les **signaux** sont une nouvelle fonctionnalité introduite dans Angular 16 pour gérer l’état réactif de manière plus simple et performante. Un signal est un conteneur qui stocke une valeur et notifie les consommateurs lorsque cette valeur change.
+
+### Avantages :
+- Plus léger et plus performant que les observables RxJS pour certains cas d’utilisation.
+- Simplifie la gestion d’état réactif sans nécessiter de bibliothèque externe.
+
+#### Exemple :
+
+```typescript
+import { signal, computed } from '@angular/core';
+
+@Component({
+  selector: 'app-counter',
+  template: `
+    <p>Count: {{ count() }}</p>
+    <button (click)="increment()">Increment</button>
+  `,
+})
+export class CounterComponent {
+  count = signal(0); // Crée un signal avec une valeur initiale de 0
+  doubleCount = computed(() => this.count() * 2); // Signal calculé
+
+  increment() {
+    this.count.update((value) => value + 1); // Met à jour le signal
+  }
+}
+```
+
+---
+
+## Différences et Utilisations
+
+| Fonctionnalité | Composants | Directives | Signaux |
+|--------------|-----------|-----------|--------|
+| **Rôle** | Gère une partie de l’UI. | Modifie le comportement ou l’apparence des éléments DOM. | Gère l’état réactif de manière simple et performante. |
+| **Utilisation** | Pour créer des blocs d’interface utilisateur réutilisables. | Pour ajouter des comportements dynamiques aux éléments existants. | Pour gérer des états réactifs sans RxJS. |
+| **Exemple** | Afficher une liste d’utilisateurs. | Appliquer un style conditionnel. | Gérer un compteur réactif. |
+
+---
+
+## Conclusion
+
+- **Composants** : Utilisés pour structurer l’interface utilisateur.
+- **Directives** : Utilisées pour modifier le comportement ou l’apparence des éléments DOM.
+- **Signaux** : Utilisés pour gérer l’état réactif de manière simple et performante, en particulier dans Angular 16+.
+
+
 # Expliquez le cycle de vie des composants Angular.
 
 Le cycle de vie d’un composant Angular est géré par des hooks (méthodes) qui sont appelés à différents stades de la vie du composant. Voici les principaux hooks :
